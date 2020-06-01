@@ -7,6 +7,8 @@ class App extends React.Component {
     return (
       <div>
         Welcome!
+        <br/>
+        <br/>
         <List />
       </div>
     );

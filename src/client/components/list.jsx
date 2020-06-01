@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./list.scss"
+import styles from "./list.scss";
 
 export default class List extends React.Component {
   constructor() {
@@ -7,19 +7,28 @@ export default class List extends React.Component {
 
     this.state = {
       listArray: [],
+      errorMsg: "",
     };
   }
 
   clickHandler() {
     console.log(this.state.listArray);
-    alert("Item successfully added to to-do-list!");
+    
   }
 
   blurHandler(event) {
     let listArray = this.state.listArray;
-    listArray.push(event.target.value);
-    this.setState({ listArray });
-    event.target.value = "";
+    if (event.target.value.length <= 1 || event.target.value.length >= 200) {
+      let errorMsg =
+        "Please enter a valid string input between 1 and 200 characters";
+      this.setState({ errorMsg });
+    } else {
+      let errorMsg = "";
+      listArray.push(event.target.value);
+      this.setState({ listArray, errorMsg });
+      event.target.value = "";
+      // alert("Item successfully added to to-do-list!");
+    }
   }
 
   capitalizeFirstLetter(string) {
@@ -27,9 +36,8 @@ export default class List extends React.Component {
   }
 
   render() {
-
     let list = this.state.listArray.map((element) => {
-      return <li>{this.capitalizeFirstLetter(element)}</li>
+      return <li>{this.capitalizeFirstLetter(element)}</li>;
     });
 
     return (
@@ -42,6 +50,7 @@ export default class List extends React.Component {
             }}
           ></input>
         </div>
+        <br />
         <button
           onClick={() => {
             this.clickHandler();
@@ -49,10 +58,9 @@ export default class List extends React.Component {
         >
           Add Item
         </button>
+        <div className={styles.errorMsg}>{this.state.errorMsg}</div>
         <div className={styles.list}>
-          <ol>
-            {list}
-          </ol>
+          <ol>{list}</ol>
         </div>
       </div>
     );
