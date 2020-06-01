@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./list.scss"
 
 export default class List extends React.Component {
   constructor() {
@@ -11,7 +12,6 @@ export default class List extends React.Component {
 
   clickHandler() {
     console.log(this.state.listArray);
-    let listArray = this.state.listArray;
     alert("Item successfully added to to-do-list!");
   }
 
@@ -22,7 +22,16 @@ export default class List extends React.Component {
     event.target.value = "";
   }
 
+  capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   render() {
+
+    let list = this.state.listArray.map((element) => {
+      return <li>{this.capitalizeFirstLetter(element)}</li>
+    });
+
     return (
       <div>
         <div>
@@ -40,6 +49,11 @@ export default class List extends React.Component {
         >
           Add Item
         </button>
+        <div className={styles.list}>
+          <ol>
+            {list}
+          </ol>
+        </div>
       </div>
     );
   }
