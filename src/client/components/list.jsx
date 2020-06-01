@@ -13,7 +13,6 @@ export default class List extends React.Component {
 
   clickHandler() {
     console.log(this.state.listArray);
-    
   }
 
   blurHandler(event) {
@@ -35,9 +34,19 @@ export default class List extends React.Component {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
+  remove(event) {
+    let id = event.target.id;
+    console.log(id);
+    let listArray = this.state.listArray;
+    listArray.splice(id, 1);
+    this.setState({ listArray });
+  }
+
   render() {
-    let list = this.state.listArray.map((element) => {
-      return <li>{this.capitalizeFirstLetter(element)}</li>;
+    let list = this.state.listArray.map((element, index) => {
+      return <li id={index} onClick={(event) => {
+        this.remove(event);
+      }}>{this.capitalizeFirstLetter(element)}</li>;
     });
 
     return (
@@ -50,6 +59,15 @@ export default class List extends React.Component {
             }}
           ></input>
         </div>
+        
+        {/* <div>
+          Remove List Item Number:{" "}
+          <input
+            onBlur={(event) => {
+              this.blurHandlerRemove(event);
+            }}
+          ></input>
+        </div> */}
         <br />
         <button
           onClick={() => {
@@ -59,6 +77,8 @@ export default class List extends React.Component {
           Add Item
         </button>
         <div className={styles.errorMsg}>{this.state.errorMsg}</div>
+        <h1>To-do List</h1>
+        <div>Click on item to remove it from the list.</div>
         <div className={styles.list}>
           <ol>{list}</ol>
         </div>
