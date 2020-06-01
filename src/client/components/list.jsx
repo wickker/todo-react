@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./list.scss";
+var moment = require('moment');
+moment().format();
 
 export default class List extends React.Component {
   constructor() {
@@ -23,7 +25,9 @@ export default class List extends React.Component {
       this.setState({ errorMsg });
     } else {
       let errorMsg = "";
-      listArray.push(event.target.value);
+      let timeNow = moment().format('LLL');
+      let string = event.target.value + " | " + timeNow;
+      listArray.push(string);
       this.setState({ listArray, errorMsg });
       event.target.value = "";
       // alert("Item successfully added to to-do-list!");
@@ -79,6 +83,7 @@ export default class List extends React.Component {
         <div className={styles.errorMsg}>{this.state.errorMsg}</div>
         <h1>To-do List</h1>
         <div>Click on item to remove it from the list.</div>
+        
         <div className={styles.list}>
           <ol>{list}</ol>
         </div>
