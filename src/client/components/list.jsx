@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./list.scss";
-var moment = require('moment');
+var moment = require("moment");
 moment().format();
+import Form from "./form";
 
 export default class List extends React.Component {
   constructor() {
@@ -10,6 +11,7 @@ export default class List extends React.Component {
     this.state = {
       listArray: [],
       errorMsg: "",
+      deletedItems: []
     };
   }
 
@@ -25,7 +27,7 @@ export default class List extends React.Component {
       this.setState({ errorMsg });
     } else {
       let errorMsg = "";
-      let timeNow = moment().format('LLL');
+      let timeNow = moment().format("LLL");
       let string = event.target.value + " | " + timeNow;
       listArray.push(string);
       this.setState({ listArray, errorMsg });
@@ -42,51 +44,54 @@ export default class List extends React.Component {
     let id = event.target.id;
     console.log(id);
     let listArray = this.state.listArray;
-    listArray.splice(id, 1);
-    this.setState({ listArray });
+    let removed = listArray.splice(id, 1);
+    let deletedItems = this.state.deletedItems;
+    deletedItems.push(removed[0]);
+    this.setState({ listArray, deletedItems });
   }
 
   render() {
     let list = this.state.listArray.map((element, index) => {
-      return <li id={index} onClick={(event) => {
-        this.remove(event);
-      }}>{this.capitalizeFirstLetter(element)}</li>;
+      return (
+        <div className={styles.list_item}>
+          <p>{this.capitalizeFirstLetter(element)}</p>
+          <button
+            id={index}
+            onClick={(event) => {
+              this.remove(event);
+            }}
+          >
+            Delete Item
+          </button>
+        </div>
+      );
+    });
+
+    let deletes = this.state.deletedItems.map((element) => {
+      return (
+        <div className={styles.list_item}>
+          <p>{this.capitalizeFirstLetter(element)}</p>
+        </div>
+      );
     });
 
     return (
       <div>
-        <div>
-          New List Item:{" "}
-          <input
-            onBlur={(event) => {
-              this.blurHandler(event);
-            }}
-          ></input>
-        </div>
-        
-        {/* <div>
-          Remove List Item Number:{" "}
-          <input
-            onBlur={(event) => {
-              this.blurHandlerRemove(event);
-            }}
-          ></input>
-        </div> */}
-        <br />
-        <button
-          onClick={() => {
-            this.clickHandler();
+        <Form
+          blurFunc={(event) => {
+            this.blurHandler(event);
           }}
-        >
-          Add Item
-        </button>
-        <div className={styles.errorMsg}>{this.state.errorMsg}</div>
+          clickFunc={(event) => {
+            this.clickHandler(event);
+          }}
+          errorMsg={this.state.errorMsg}
+        />
+
         <h1>To-do List</h1>
         <div>Click on item to remove it from the list.</div>
-        
-        <div className={styles.list}>
-          <ol>{list}</ol>
-        </div>
+        <div className={styles.list}>{list}</div>
+        <h3>Deleted Items:</h3>
+        <div className={styles.list}>{deletes}</div>
       </div>
     );
   }

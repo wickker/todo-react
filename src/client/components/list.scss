@@ -6,7 +6,11 @@
   color: yellow;
 }
 
-li:hover {
+button:hover {
   cursor: pointer;
   color: blue;
+}
+
+.list_item {
+  border: solid 1px black;
 }
